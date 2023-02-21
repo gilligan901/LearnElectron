@@ -1,44 +1,35 @@
-const { app, BrowserWindow, Menu } = require('electron')
+const { app, BrowserWindow, Menu, ipcMain, MenuItem } = require('electron')
 const path = require('path')
 const mysql = require('mysql2');
 
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'your_username',
-  password: 'your_password',
-  database: 'your_database'
-});
+// const connection = mysql.createConnection({
+//   host: 'localhost',
+//   user: 'your_username',
+//   password: 'your_password',
+//   database: 'your_database'
+// });
 
-const isMac = process.platform === 'darwin'
-const form = document.querySelector('form');
+const isMac = process.platform === 'darwin';
+const isDev = process.env.NODE_ENV !== 'production';
 
-form.addEventListener('submit', (event) => {
-  event.preventDefault(); // prevent form submission
-  
-  const name = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
-  
-  // insert data into MySQL database
-  connection.query(
-    'INSERT INTO users (name, password) VALUES (?, ?)',
-    [name, password],\
-    (error, results, fields) => {
-      if (error) throw error;
-      
-      console.log('Data inserted successfully');
-    }
-  );
-});
-
+let mainWindow = null;
 
 function createMainWindow () {
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     title: 'My App',
     width: 400,
     height: 400,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true,
+      devTools: true 
+    }
   });
 
   mainWindow.loadFile(path.join(__dirname, './renderer/index.html'))
+
+  if (isDev) { mainWindow.webContents.openDevTools() }  
 }
 
 app.whenReady().then(() => {
@@ -73,15 +64,18 @@ app.on('window-all-closed', () => {
   }
 })
 
+// catch username
+ipcMain.on('add:username', (e, username) => {
+  console.log(username);
+  mainWindow.webContents.send('add:username', username)
+});
+
 const mainMenuTemplate = [
   {
     label: 'File',
     submenu: [
       {
-        label: 'Add Item',
-        click(){
-          createAddWindow();
-        }
+        role: 'reload'
       },
       {
         label: 'Clear Items'

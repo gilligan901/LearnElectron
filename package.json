@@ -10,6 +10,7 @@
   "author": "Charlie Henderson",
   "license": "MIT",
   "dependencies": {
-    "electron": "^23.1.0"
+    "electron": "^23.1.0",
+    "mysql2": "^3.1.2"
   }
 }
