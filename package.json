@@ -10,6 +10,6 @@
   "author": "Charlie Henderson",
   "license": "MIT",
   "dependencies": {
-    "electron": "^23.0.0"
+    "electron": "^23.1.0"
   }
 }
