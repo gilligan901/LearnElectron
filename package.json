@@ -1,0 +1,15 @@
+{
+  "name": "my-electron-app",
+  "productName": "QC Remake",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Charlie Henderson",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^23.0.0"
+  }
+}
